@@ -1,0 +1,287 @@
+
+*{
+font-family: Arial, Helvetica, sans-serif;
+/* font-family: 'Roboto', sans-serif; */
+}
+
+body{
+margin: 0;
+box-sizing: border-box;
+text-align: center;
+}
+
+nav{
+top: 0;
+position: static;
+display: flex;
+flex-direction: row;
+background: #102C54;
+background: #155263;
+width: 100vw;
+justify-content: space-evenly;
+height: 55px;
+align-items: center;
+padding: 5px;
+}
+
+nav a{
+text-decoration: none;
+font-size: 1.2rem;
+color: white;
+}
+
+
+button{
+    padding: 7px;
+    background: #ff9a3c;
+    border: none;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    color: white;
+
+}
+
+button:hover{
+    padding: 7px;
+    background: #ff6f3c;
+    cursor: pointer;
+}
+
+content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.img_devices{
+    max-width: 34vh;
+    max-height: 19vw;
+    min-width: 200px;
+    min-height: 100px;
+    border: 1px dashed black;
+    object-fit: cover;
+}
+
+.img-links{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 45px;
+}
+
+.select-scan{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#img-404{
+    max-height: 700px;
+}
+
+#txtarea-res{
+    /* resize: vertical; */
+    min-width: 250px;
+    min-height: 300px;
+    height: max-content;
+    width: max-content;
+}
+
+#btn-clipboard{
+    border: none;
+    background: none;
+    font-size: 20px;
+    color: black;
+}
+
+#btn-clipboard:hover{
+    border: none;
+    background: yellow;
+    cursor: pointer;
+}
+
+
+/*  */
+#txtarea-res-1{
+    /* resize: vertical; */
+    min-width: 250px;
+    min-height: 300px;
+    height: max-content;
+    width: max-content;
+}
+
+.btn-action-1{
+    border: none;
+    background: none;
+    font-size: 20px;
+    color: black;
+}
+
+.btn-action-1:hover{
+    border: none;
+    background: yellow;
+    cursor: pointer;
+}
+
+.container-form-scan{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#container-scan{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.container-form-scan form{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+
+video, canvas{
+    width: 60vw;
+    height: 40vh;
+}
+
+
+
+/* Loader */
+
+.invisible{
+    display: none;
+}
+
+.load{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+    border-style: dashed solid  solid dotted;
+    border-color: #FF3D00 #FF3D00 transparent #FF3D00;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+.loader::after {
+content: '';  
+box-sizing: border-box;
+position: absolute;
+left: 20px;
+top: 31px;
+border: 10px solid transparent;
+border-right-color: #FF3D00;
+transform: rotate(-40deg);
+}
+
+@keyframes rotation {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+} 
+
+
+
+#response-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    max-width: 50vw;
+}
+
+#code-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-self: center;
+}
+
+#img_preview{
+    max-width: 50vw;
+    max-height: 50vh;
+    border: 1px solid black;
+    object-fit:contain;
+}
+
+#peerid-input{
+    padding: 10px;
+}
+
+.span-response-container{
+    text-align: left;
+    border: 1px dashed black;
+    max-width: 50vw;
+    align-items: center;
+    padding: 5px;
+}
+.span-response-container >span:focus{
+    outline: none;
+}
+
+#qrcode{
+    max-width: 50vw;
+}
+
+.span-response{
+    white-space: pre-wrap;
+    border: 1px dashed black;
+    text-align: left;
+    padding: 5px;
+}
+
+.span-response:focus{
+    outline: none;
+}
+
+.rdBtns{
+    border: 1px solid grey;
+    max-width: 18vw;
+    align-items: left;
+}
+
+.container-rdBtns{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-self: center;
+}
+
+#span_code:hover{
+    background: yellow;
+}
+
+p{
+    max-width: 50vw;
+}

@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  
+  serverFlask:
+    image: flask_srv_base
+    ports:
+      - 5000:5000
+    container_name: serverFlask
+    volumes:
+      - type: bind
+        source: ./srvFlask/
+        target: /app
+    
+  peerserver:
+    image: peerjs/peerjs-server
+    ports:
+      - 9000:9000
+    volumes:
+      - ./certs:/certs
+    command: --port 9000 --cors --sslkey /certs/localhost.decrypted.key --sslcert /certs/localhost.crt --allow_discovery true
+    container_name: peerserver
+
+  nodeapp:
+    image: app_node_base
+    ports:
+      - 3000:3000
+    container_name: appNode
+    volumes:
+      - type: bind
+        source: ./appNode
+        target: /app
+    depends_on:
+      - peerserver
+      - serverFlask
+    
+    

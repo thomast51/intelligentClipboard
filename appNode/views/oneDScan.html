@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One device scan</title>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css"></head>
+    
+<body>
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="/oneDScan">Scan à un appareil</a>
+        <a href="/twoDScan">Scan à deux appareils</a>
+        <a href="/help">Aide</a>
+    </nav>
+    <h1>Scan à un appareil</h1>
+    <button id="scan-start-btn">Start scanning</button>
+    <button id="file-recogn-btn">Use a file instead</button>
+    <div class="container-form-scan invisible">
+        <div class="invisible" id="container-scan">
+            <video autoplay="false" id="vid" preload="auto" muted playsinline></video>
+            <button id="btn-photo">Take Photo</button>
+        </div>
+        
+        <form action="/send_image" method="post" id="form-scan">
+            <canvas id="cnv-vid" style="height: 0px;"></canvas>
+            <input type="hidden" id="img_datas" name="img_datas">
+            <input type="file" accept="image/*" id="file_img_datas" name="file_img_datas" class="invisible">
+
+            <img name="img_preview" id="img_preview">
+
+            <select id="langueOptions" name="langueOptions">
+                <option value="fra">Fra</option>
+                <option value="eng">Eng</option>
+                <option value="deu">Deu</option>
+            </select>
+            
+            <input type="hidden" value="1" class="page_info_input" name="page_info_input">
+            <button type="submit">Valider</button>
+        </form>
+
+        <div id="load" class="invisible">
+            <span class="loader"></span>
+            <span>Extracting ...</span>
+        </div>
+    </div>
+    <script src="/assets/scan.js"></script>
+    
+</body>
+
+</html>

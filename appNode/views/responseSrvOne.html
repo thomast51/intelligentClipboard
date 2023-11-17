@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Réponse</title>
+        <link rel="stylesheet" href="/assets/style.css" type="text/css">
+        <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/oneDScan">Scan à un appareil</a>
+            <a href="/twoDScan">Scan à deux appareils</a>
+            <a href="/help">Aide</a>
+        </nav>
+        <content>
+            <h1>Résultat</h1>
+            <div>
+                <button id="btn-clipboard-1" title="Copy to clipboard" class="btn-action-1"><i class="fa-regular fa-clipboard"></i></button>   
+                <button id="btn-download" title="Save result as txt file" class="btn-action-1"><i class="fa-solid fa-file-arrow-down"></i></button>
+            </div>
+            <div class="span-response-container">
+                <span id="txtarea-res-1" contenteditable="true" style="white-space: pre-wrap;">{{ data }}</span>
+            </div>    
+        </content>
+       
+        <script>
+            const txtarea_res = document.getElementById("txtarea-res-1")
+            const btnDownload = document.getElementById("btn-download")
+
+            if (txtarea_res.innerText === ""){
+                txtarea_res.innerText = "Pas de texte détecté sur cette image"
+            }
+
+            
+            document.getElementById("btn-clipboard-1").addEventListener("click", ()=>{
+                /**
+                 * Fonction ajoutant au presse-papier de l'utilisateur le texte 
+                 * que contient le span de réponse du serveur sur le click du bouton
+                 * correspondant.
+                */
+                navigator.clipboard.writeText(txtarea_res.innerText)
+            })
+            
+            btnDownload.addEventListener("click", ()=>{
+                /**
+                 * Fonction qui sur le click du bouton télécharger, créer un fichier
+                 * texte contenant le contenu du span de réponse du serveur.
+                 * 
+                */
+                const result = txtarea_res.innerText
+                const element = document.createElement('a')
+                const blob = new Blob([result], { type: 'plain/text' })
+                const fileUrl = URL.createObjectURL(blob)
+
+                element.setAttribute('href', fileUrl) 
+                element.setAttribute('download', "resultOcr.txt")
+                element.style.display = 'none'
+
+                document.body.appendChild(element)
+                element.click()
+                document.body.removeChild(element)
+
+            })  
+        </script>
+    </body>
+</html>

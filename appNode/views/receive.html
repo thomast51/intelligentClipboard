@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Receive</title>
+        <link rel="stylesheet" href="/assets/style.css" type="text/css">
+        <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/oneDScan">Scan à un appareil</a>
+            <a href="/twoDScan">Scan à deux appareils</a>
+            <a href="/help">Aide</a>
+        </nav>
+        <h1>Réceptionner</h1>
+        <img src="/assets/images/peerid.jpg" class="img_devices" draggable="false">
+        <content>
+            <h3>Générer une session</h3>
+            <span id="span_code" style="cursor: pointer;" title="Copier le code"></span>
+            <img id="qrcode">
+
+            <div>
+                <button id="btn-clipboard-1" title="Copy to clipboard" class="btn-action-1 invisible"><i class="fa-regular fa-clipboard"></i></button>   
+                <button id="btn-download" title="Save result as txt file" class="btn-action-1 invisible"><i class="fa-solid fa-file-arrow-down"></i></button>
+            </div>
+            <div class="span-response-container invisible">
+                <span id="txtarea-res" contenteditable="true"></span>
+            </div>
+        </content>
+        
+        <script>
+            const hexaCode = document.getElementById("span_code")
+            const txtarea_res = document.getElementById("txtarea-res")
+            const qr_img = document.getElementById("qrcode")
+            const btnAddToClipboard = document.getElementById("btn-clipboard-1")
+            const btnDownload = document.getElementById("btn-download")
+
+            
+            //générer le code
+            const form_code = document.getElementById("code_generate")
+
+            // Fonction générant un code hexadécimal aléatoire de longuer x en fonction du paramètre qu'elle reçoit
+            const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+            
+            let peerid = genRanHex(5)
+            let recever;
+
+            // Mode cloud
+            recever = new Peer(peerid)
+
+            // Mode local
+            // recever = new Peer(genRanHex(5),{
+            //     host: '10.205.201.100',
+            //     port: 9000,
+            //     debug:3,
+            //     secure:true
+            // })
+
+            
+            const getQr = async()=>{
+                /**
+                 * Fonction effectuant une requête post au backend contenant
+                 * les données qu'on souhaite placer dans un code qr
+                 * et qui reçoit un qrcode en retour contenant les données envoyées au backend.
+                 * Ce qrcode est ensuite ajouté comme source d'une image.
+                 **/
+                const appUrl = "https://df33-153-109-46-1.ngrok-free.app"
+                urlToPeerIdReceiver = `${appUrl}/send_scan/${peerid}`
+                // urlToPeerIdReceiver = peerid
+                await fetch("/get-qr", {
+                    method:"POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body:JSON.stringify({ urlToPeerIdReceiver }),
+                })
+                .then((response)=>{
+                    return response.json()
+                })
+                .then(data=>{
+                    qr_img.src = `data:image/jpeg;base64,${data}`
+                })
+                .catch(error=>{
+                    console.log(error)
+                })
+            }
+            
+            getQr()
+        
+            hexaCode.innerText = recever.id
+            
+            recever.on('connection', (conn)=> {
+                conn.on('data', (data)=>{
+                    txtarea_res.innerText=data
+
+                    // ========================= Gestion de l'affichage ============================
+                    txtarea_res.classList.remove("invisible")
+                    btnAddToClipboard.classList.remove("invisible")
+                    btnDownload.classList.remove("invisible")
+                    document.querySelector(".span-response-container").classList.remove("invisible")
+                    // ==============================================================================
+                })
+            })
+
+            
+            btnAddToClipboard.addEventListener("click", ()=>{
+                /**
+                 * Fonction ajoutant au presse-papier de l'utilisateur le texte 
+                 * que contient le span de réponse du serveur sur le click du bouton
+                 * correspondant.
+                */
+                navigator.clipboard.writeText(txtarea_res.innerText)
+            })
+            
+            btnDownload.addEventListener("click", ()=>{
+                /**
+                 * Fonction qui sur le click du bouton télécharger, créer un fichier
+                 * texte contenant le contenu du span de réponse du serveur.
+                 * 
+                */
+                const result = txtarea_res.innerText
+                const element = document.createElement('a')
+                const blob = new Blob([result], { type: 'plain/text' })
+                const fileUrl = URL.createObjectURL(blob)
+
+                element.setAttribute('href', fileUrl) 
+                element.setAttribute('download', "resultOcr.txt")
+                element.style.display = 'none'
+
+                document.body.appendChild(element)
+                element.click()
+                document.body.removeChild(element);
+            })  
+
+            hexaCode.addEventListener("click", () =>{
+                /**
+                 * Fonction qui sir le clique du code hexadécimal
+                 * d'identification de l'ojet recever, l'ajoute
+                 * au presse-papier.
+                */
+                navigator.clipboard.writeText(hexaCode.innerText)
+            })
+
+        </script>
+    </body>
+</html>

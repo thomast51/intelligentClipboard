@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Réponse</title>
+        <link rel="stylesheet" href="/assets/style.css" type="text/css">
+        <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+    </head>
+    <body>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/oneDScan">Scan à un appareil</a>
+            <a href="/twoDScan">Scan à deux appareils</a>
+            <a href="/help">Aide</a>
+        </nav>
+        <content>
+            <h1>Résultat</h1>
+            <div id="response-container">
+                <div id="code-container">
+                    <input placeholder="Entrer le code de connexion" id="peerid-input" class="invisible">
+                    <img id="qrcode">
+    
+                    <div class="container-rdBtns" id="container-rdBtns">
+                        <div id="qrFormGroup" class="rdBtns">
+                            <input type="radio" name="transfertTypeChoice" id="qrRadBtn" checked="checked">
+                            <label for="qrRadBtn">QR code</label>
+                        </div>
+                        <div id="hexFormGroup" class="rdBtns">
+                            <input type="radio" name="transfertTypeChoice" id="hexaCodeRadBtn">
+                            <label for="hexaCodeRadBtn">Code hexadécimal</label>
+                        </div>
+                    </div>
+                </div>
+                <button id="connect-btn">Démarrer le transfert</button>
+
+                <span id="response-srv" contenteditable="true" class="span-response">{{ data }}</span>
+                <span id="receverId" class="invisible">{{ receverId }}</span>
+            </div>
+        </content>
+       
+        <script>
+            const qr_img = document.getElementById("qrcode")
+            const res = document.getElementById("response-srv")
+            const hexaCodeInput = document.getElementById("peerid-input")
+            const trandfertBtn = document.getElementById("connect-btn")
+
+            const receverId = document.getElementById("receverId").innerText
+
+            // Code type choice
+            const hexaCodeRadioBtn = document.getElementById("hexaCodeRadBtn")
+            const QRCodeRadioBtn = document.getElementById("qrRadBtn")
+            
+
+            // ========== Gestion de l'affichage d'une réponse nulle du serveur ============
+            if (receverId === "{{ receverId }}"){
+                document.getElementById("qrFormGroup").classList.add("invisible")
+                document.getElementById("hexFormGroup").classList.add("invisible")      
+                hexaCodeInput.classList.remove("invisible")
+                QRCodeRadioBtn.checked = false
+            }
+
+            if (res.innerText === ""){
+                res.innerText = "Pas de texte détecté sur cette image"
+                document.getElementById("qrFormGroup").classList.add("invisible")
+                document.getElementById("hexFormGroup").classList.add("invisible")
+                trandfertBtn.classList.add("invisible")
+                qr_img.classList.add("invisible")
+                hexaCodeInput.classList.add("invisible")
+            }
+            // =============================================================================
+           
+
+            // ============================================================
+            // Groupe de fonction qui sur le changement des radio buttons
+            // appelle la fonction qui modifie l'affichage en fonction
+            hexaCodeRadioBtn.addEventListener("change", ()=>{
+                handleRdBtns()
+            })
+
+            QRCodeRadioBtn.addEventListener("change", ()=>{
+                handleRdBtns()
+            })
+            // ==========================================================
+
+
+
+            const handleRdBtns = () =>{
+                /**
+                 * Fonction gérant l'affichage des éléments de la page
+                 * en fonction de la propriété checked des radio buttons
+                */
+                if (hexaCodeRadioBtn.checked){
+                    qr_img.classList.add("invisible")
+                    hexaCodeInput.classList.remove("invisible")
+                }
+                else if (QRCodeRadioBtn.checked){
+                    qr_img.classList.remove("invisible")
+                    hexaCodeInput.classList.add("invisible")
+                }
+            }
+
+            
+            // Fonction générant un code hexadécimal aléatoire de longuer x en fonction du paramètre qu'elle reçoit
+            const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+            
+
+            let peeridSender = genRanHex(5)
+
+            // Mode cloud
+            const sender = new Peer(peeridSender)
+
+            // Mode local
+            // const sender = new Peer(peeridSender,{
+            //     host: '10.205.201.100',
+            //     port: 9000,
+            //     debug:3,
+            //     secure:true
+            // })
+
+            trandfertBtn.addEventListener("click", ()=>{
+                /**
+                 * Transfert le contenu du span de réponse à un autre client sur le click du
+                 * bouton transfert
+                */
+                const inputValue = hexaCodeInput.value
+                let peerToConnectTo = QRCodeRadioBtn.checked ? receverId : inputValue
+                
+                try{
+                    const conn = sender.connect(peerToConnectTo)
+                    conn.on('open', ()=>{
+                        conn.send(res.innerText)
+                        conn.close()
+                    })
+                }
+                catch(e){
+                    console.log(e)
+                }
+            })
+        </script>
+    </body>
+</html>

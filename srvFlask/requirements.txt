@@ -1,0 +1,7 @@
+flask
+pytesseract
+numpy
+opencv-python
+pyspellchecker
+deskew
+qrcode
