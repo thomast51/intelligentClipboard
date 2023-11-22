@@ -6,17 +6,17 @@ WEB-rtc communications (the result of the OCR process) between two clients using
 
 ## To launch the app localy
 1.
- >Build de l'image de l'app node-express à l'aide du Dockerfile
+ >Build of the node-express app image with the appropriate Dockerfile
 
 `docker build ./appNode -t app_node_base`
 
 2.
->Build de l'image du serveur Flask à l'aide du Dockerfile
+>Build of the Flask server image with the appropriate Dockerfile
 
 `docker build ./srvFlask -t srv_flask_base`
 
 3.
->Lancement des containers
+>Running the containers
 
 `docker compose up -d`
 
