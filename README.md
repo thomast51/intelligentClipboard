@@ -4,7 +4,7 @@ OCR web application (express.js) using a flask server with pytesseract.
 
 WEB-rtc communications (the result of the OCR process) between two clients using peerjs.
 
-## To launch the app in local
+## To launch the app localy
 1.
  >Build de l'image de l'app node-express à l'aide du Dockerfile
 
